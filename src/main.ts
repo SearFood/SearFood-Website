@@ -329,7 +329,7 @@ function render() {
     const applyFilters = () => {
       const query = searchInput ? searchInput.value.toLowerCase() : '';
       const filtered = recipes.filter(r => {
-        const matchesSearch = r.title.toLowerCase().includes(query) || r.description.toLowerCase().includes(query);
+        const matchesSearch = r.title.toLowerCase().includes(query);
         const matchesCategory = currentFilter === 'all' || r.category === currentFilter;
         return matchesSearch && matchesCategory;
       });
