@@ -481,3 +481,29 @@ footer {
     gap: 1.5rem;
   }
 }
+
+/* --- Read More Functionality --- */
+.retail-desc.truncated {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.read-more-btn {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  margin-top: 0.8rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: var(--font-sans);
+  transition: background 0.3s ease;
+  display: inline-block; /* Ensure vertical margins work */
+}
+
+.read-more-btn:hover {
+  background-color: #e07215;
+}

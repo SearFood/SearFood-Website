@@ -159,12 +159,30 @@ function renderRetailGrid(items: Recipe[]) {
         <img src="${recipe.image}" alt="${recipe.title}" loading="lazy" />
       </div>
       
-      <p class="retail-desc">
+      <p class="retail-desc truncated" id="desc-${recipe.id}">
         ${recipe.description}
       </p>
+      <button class="read-more-btn" onclick="toggleDescription(${recipe.id})">Read More</button>
     </div>
   `).join('');
 }
+
+// Global toggle function
+(window as any).toggleDescription = (id: number) => {
+  const desc = document.getElementById(`desc-${id}`);
+  const btn = desc?.nextElementSibling as HTMLButtonElement;
+  
+  if (desc && btn) {
+    const isTruncated = desc.classList.contains('truncated');
+    if (isTruncated) {
+      desc.classList.remove('truncated');
+      btn.textContent = 'Read Less';
+    } else {
+      desc.classList.add('truncated');
+      btn.textContent = 'Read More';
+    }
+  }
+};
 
 const ExportsPage = (): string => `
   <section class="section-container section-dark">

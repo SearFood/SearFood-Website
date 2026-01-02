@@ -12,28 +12,28 @@ export const recipes: Recipe[] = [
     id: 1001,
     title: "Gujarati Chai Masala",
     image: "/gujarati-chai-masala.jpg",
-    description: "Authentic Gujarati Chai Masala for a refreshing tea experience.",
+    description: "Traditional Gujarati Chai Masala is a aromatic spice blend rooted in Gujarat’s culinary heritage. Influenced by Ayurveda, it combines ginger, cardamom, cloves, pepper, and cinnamon. Historically prepared in homes, it was valued for digestion and warmth, creating a gently spiced, comforting chai enjoyed across generations.",
     category: 'Masala'
   },
   {
     id: 1002,
     title: "Iyengar Rasam Powder",
     image: "/iyengar-rasam-powder.png",
-    description: "Traditional Iyengar style Rasam Powder.",
+    description: "Rasam is a soulful dish from South India, cherished for generations. In Iyengar families, this sacred recipe has been passed down through centuries, prepared with handpicked spices and lentils. Rooted in Ayurvedic wisdom, it is designed to aid digestion and provide essential benefits for overall well-being.",
     category: 'Masala'
   },
   {
     id: 1003,
     title: "Iyengar Sambar Powder",
     image: "/iyengar-sambar-powder.png",
-    description: "Aromatic Iyengar Sambar Powder for authentic South Indian curry.",
+    description: "Traditional Iyengar Sambar Powder is a finely balanced blend rooted in temple kitchens of Tamil Nadu. Made with roasted lentils, spices, and no onion or garlic, it delivers pure, aromatic flavor true to Iyengar culinary tradition.",
     category: 'Masala'
   },
   {
     id: 1004,
     title: "Everyday Bhaji Masala",
-    image: "/logo.png",
-    description: "Versatile Bhaji Masala for your daily vegetable dishes.",
+    image: "/everyday-bhaji-masala.jpg",
+    description: "Versatile, all-in-one Bhaji Masala is a common spice blend used in a wide variety of vegetable dishes. It enhances natural flavors, adds balanced spice, and makes everyday cooking simple, quick, and delicious.",
     category: 'Masala'
   },
 
@@ -104,28 +104,28 @@ export const recipes: Recipe[] = [
   {
     id: 901,
     title: "Mustard Seeds (Rai)",
-    image: "/logo.png",
+    image: "https://www.organicgyaan.com/cdn/shop/files/Small-Mustard-Seeds.jpg?v=1721395851&width=1214",
     description: "Premium quality small black Mustard seeds.",
     category: 'Spice'
   },
   {
     id: 902,
     title: "Lakadong Turmeric Powder",
-    image: "/logo.png",
+    image: "https://www.pahariroots.co.in/storage/2023/06/lakadong-turmeric.webp",
     description: "High curcumin content Lakadong Turmeric powder.",
     category: 'Spice'
   },
   {
     id: 903,
     title: "Cinnamon - Processed",
-    image: "/logo.png",
+    image: "https://thottamfarmfresh.com/wp-content/uploads/2022/07/Ceylon-cinnamon.webp",
     description: "Processed Cinnamon quills for easy use.",
     category: 'Spice'
   },
   {
     id: 904,
     title: "Raw Cinnamon",
-    image: "/logo.png",
+    image: "https://tiimg.tistatic.com/fp/1/007/950/a-grade-natural-pure-dried-raw-cinnamon-stick-with-high-nutritious-value-472.jpg",
     description: "Raw, unrefined Cinnamon bark.",
     category: 'Spice'
   }
