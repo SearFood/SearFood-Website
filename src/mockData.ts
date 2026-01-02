@@ -48,7 +48,7 @@ export const recipes: Recipe[] = [
   {
     id: 2,
     title: "Fenugreek Seeds (Methi)",
-    image: "https://upload.wikimedia.org/wikipedia/commons/1/16/Fenugreek_Seeds_01.jpg",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRi2VDvtRHQTP9jf6CIn1kYp7p178h70voTB8T1MgaKMqjkYC0xuLfBJ22wHgJ7CZDIWFJzn2MRTrAYaYseXw9-JQBgVSa1H4D_wVM4an8&s=10",
     description: "Finest Premium Quality Fenugreek Seeds (Methi) in 2 varieties comes in Various sizes starting from 100 gms (3.5 Oz) to 500 gms (1.1 lb) from Unjha (Gujarat) India",
     category: 'Spice'
   },
