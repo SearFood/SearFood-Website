@@ -41,7 +41,8 @@ const Header = (): string => `
     </div>
     
     <div class="header-controls">
-      <button id="theme-toggle" aria-label="Toggle Dark Mode">
+      <!-- Mobile Theme Toggle -->
+      <button class="theme-toggle mobile-toggle" aria-label="Toggle Dark Mode">
         <span class="icon-moon">🌙</span>
         <span class="icon-sun" style="display: none;">☀️</span>
       </button>
@@ -59,6 +60,13 @@ const Header = (): string => `
         <li><a href="/retail" data-link="retail" class="${currentPage === 'retail' ? 'active' : ''}">Retail</a></li>
         <li><a href="/exports" data-link="exports" class="${currentPage === 'exports' ? 'active' : ''}">Exports</a></li>
         <li><a href="/contact" data-link="contact" class="${currentPage === 'contact' ? 'active' : ''}">Contact Us</a></li>
+        <!-- Desktop Theme Toggle -->
+        <li class="desktop-toggle-li">
+          <button class="theme-toggle desktop-toggle" aria-label="Toggle Dark Mode">
+            <span class="icon-moon">🌙</span>
+            <span class="icon-sun" style="display: none;">☀️</span>
+          </button>
+        </li>
       </ul>
     </nav>
   </header>
@@ -73,7 +81,6 @@ const Header = (): string => `
 };
 
 // Theme Toggle Logic
-// Theme Toggle Logic
 function initTheme() {
   const savedTheme = localStorage.getItem('theme');
   // Default to light mode, only enable dark if explicitly saved
@@ -81,6 +88,10 @@ function initTheme() {
     document.body.classList.add('dark-mode');
   }
   updateThemeIcon();
+  
+  // Attach listeners to ALL toggle buttons
+  // Using event delegation or re-attaching after render isn't needed if we attach in render()
+  // But initTheme runs once on boot. We need to attach listeners in render() actually.
 }
 
 function toggleTheme() {
@@ -92,16 +103,20 @@ function toggleTheme() {
 
 function updateThemeIcon() {
   const isDark = document.body.classList.contains('dark-mode');
-  const btn = document.getElementById('theme-toggle');
-  if (btn) {
+  // Update ALL toggle buttons
+  document.querySelectorAll('.theme-toggle').forEach(btn => {
     const moon = btn.querySelector('.icon-moon') as HTMLElement;
     const sun = btn.querySelector('.icon-sun') as HTMLElement;
     if (moon && sun) {
-      moon.style.display = isDark ? 'none' : 'block';
-      sun.style.display = isDark ? 'block' : 'none';
-      btn.style.color = isDark ? '#fff' : 'var(--color-text)'; // Ensure visibility
+      if (isDark) {
+        moon.style.display = 'none';
+        sun.style.display = 'inline';
+      } else {
+        moon.style.display = 'inline';
+        sun.style.display = 'none';
+      }
     }
-  }
+  });
 }
 
 const HomePage = (): string => `
@@ -268,7 +283,7 @@ const Footer = (): string => `
     <div class="logo-container" style="justify-content: center; margin-bottom: 1rem;">
       <img src="/logo.png" alt="SearFood" style="height: 40px; opacity: 0.5; filter: grayscale(100%);" />
     </div>
-    <p>&copy; ${new Date().getFullYear()} SearFood. All Rights Reserved.</p>
+    <p>Copyright &copy; 2020 SearFood - All Rights Reserved.</p>
   </footer>
 `;
 
@@ -348,7 +363,9 @@ function render() {
   }
 
   // Theme Listener
-  document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+  document.querySelectorAll('.theme-toggle').forEach(btn => {
+    btn.addEventListener('click', toggleTheme);
+  });
   updateThemeIcon(); // Ensure correct icon state after re-render
 }
 
