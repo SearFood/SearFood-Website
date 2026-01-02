@@ -11,21 +11,21 @@ export const recipes: Recipe[] = [
   {
     id: 1001,
     title: "Gujarati Chai Masala",
-    image: "/logo.png",
+    image: "/gujarati-chai-masala.jpg",
     description: "Authentic Gujarati Chai Masala for a refreshing tea experience.",
     category: 'Masala'
   },
   {
     id: 1002,
     title: "Iyengar Rasam Powder",
-    image: "/logo.png",
+    image: "/iyengar-rasam-powder.png",
     description: "Traditional Iyengar style Rasam Powder.",
     category: 'Masala'
   },
   {
     id: 1003,
     title: "Iyengar Sambar Powder",
-    image: "/logo.png",
+    image: "/iyengar-sambar-powder.png",
     description: "Aromatic Iyengar Sambar Powder for authentic South Indian curry.",
     category: 'Masala'
   },
