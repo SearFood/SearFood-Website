@@ -216,7 +216,7 @@ function renderRetailGrid(items: Recipe[]) {
 };
 
 const ExportsPage = (): string => `
-  <section class="section-container section-dark">
+  <section class="section-container">
     <h1 class="page-title">Global Exports</h1>
     <p style="text-align: center; max-width: 700px; margin: 0 auto;">
       We manage end-to-end logistics for bulk orders across 20+ countries. Our commitment to quality ensures freshness at every port.

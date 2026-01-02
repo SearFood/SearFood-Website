@@ -459,11 +459,22 @@ footer {
   }
 
   /* Hero */
+  .hero-cinematic {
+    height: 80vh; /* Reduce height on mobile */
+  }
+
   .hero-title {
     font-size: 2.5rem;
+    margin-bottom: 1.5rem;
   }
 
   .hero-tagline {
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-cta {
+    padding: 0.8rem 1.5rem;
     font-size: 0.8rem;
   }
 
