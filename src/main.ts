@@ -283,7 +283,7 @@ const Footer = (): string => `
     <div class="logo-container" style="justify-content: center; margin-bottom: 1rem;">
       <img src="/logo.png" alt="SearFood" style="height: 40px; opacity: 0.5; filter: grayscale(100%);" />
     </div>
-    <p>Copyright &copy; 2020 SearFood - All Rights Reserved.</p>
+    <p>Copyright &copy; 2025 SearFood - All Rights Reserved.</p>
   </footer>
 `;
 
