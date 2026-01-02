@@ -105,28 +105,28 @@ export const recipes: Recipe[] = [
     id: 901,
     title: "Mustard Seeds (Rai)",
     image: "https://www.organicgyaan.com/cdn/shop/files/Small-Mustard-Seeds.jpg?v=1721395851&width=1214",
-    description: "Premium quality small black Mustard seeds.",
+    description: "Mustard seeds are an essential ingredient in Indian cooking and offer impressive health benefits. They support digestion, help maintain heart health, and possess natural anti-inflammatory properties that contribute to overall wellness.",
     category: 'Spice'
   },
   {
     id: 902,
     title: "Lakadong Turmeric Powder",
     image: "https://www.pahariroots.co.in/storage/2023/06/lakadong-turmeric.webp",
-    description: "High curcumin content Lakadong Turmeric powder.",
+    description: "Lakadong turmeric from Meghalaya contains exceptionally high curcumin levels (7–12%), making it a powerful superfood. It supports immunity, digestion, joint and skin health, liver detox, and helps fight inflammation, oxidative stress, and chronic diseases like Alzheimer’s and cancer.",
     category: 'Spice'
   },
   {
     id: 903,
     title: "Cinnamon - Processed",
     image: "https://thottamfarmfresh.com/wp-content/uploads/2022/07/Ceylon-cinnamon.webp",
-    description: "Processed Cinnamon quills for easy use.",
+    description: "Cinnamon processing is a meticulous, labor-intensive craft. Mature branches are harvested, outer bark removed, and fragrant inner bark carefully peeled. As it dries, it curls into quills, which are graded by size and quality, ensuring rich aroma and essential oil retention.",
     category: 'Spice'
   },
   {
     id: 904,
     title: "Raw Cinnamon",
     image: "https://tiimg.tistatic.com/fp/1/007/950/a-grade-natural-pure-dried-raw-cinnamon-stick-with-high-nutritious-value-472.jpg",
-    description: "Raw, unrefined Cinnamon bark.",
+    description: "True cinnamon is valued for its delicate sweetness, low coumarin making it safer for regular use, and thin, brittle layers. Unlike strong Cassia, Indian cinnamon from Kerala is traditionally grown, chemical-free, and prized in curries, teas, and baked goods worldwide.",
     category: 'Spice'
   }
 ];
