@@ -39,22 +39,38 @@ const Header = (): string => `
         <img src="/logo.png" alt="SearFood Logo" class="logo-img" />
       </a>
     </div>
+    
+    <div class="header-controls">
+      <button id="theme-toggle" aria-label="Toggle Dark Mode">
+        <span class="icon-moon">🌙</span>
+        <span class="icon-sun" style="display: none;">☀️</span>
+      </button>
+      
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Open Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
     <nav>
       <ul>
         <li><a href="/" data-link="home" class="${currentPage === 'home' ? 'active' : ''}">Home</a></li>
         <li><a href="/retail" data-link="retail" class="${currentPage === 'retail' ? 'active' : ''}">Retail</a></li>
         <li><a href="/exports" data-link="exports" class="${currentPage === 'exports' ? 'active' : ''}">Exports</a></li>
         <li><a href="/contact" data-link="contact" class="${currentPage === 'contact' ? 'active' : ''}">Contact Us</a></li>
-        <li>
-          <button id="theme-toggle" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; color: var(--color-text);">
-            <span class="icon-moon">🌙</span>
-            <span class="icon-sun" style="display: none;">☀️</span>
-          </button>
-        </li>
       </ul>
     </nav>
   </header>
 `;
+
+// Mobile Menu Toggle
+(window as any).toggleMobileMenu = () => {
+  const nav = document.querySelector('nav');
+  const btn = document.querySelector('.mobile-menu-btn');
+  nav?.classList.toggle('nav-active');
+  btn?.classList.toggle('active');
+};
 
 // Theme Toggle Logic
 // Theme Toggle Logic
