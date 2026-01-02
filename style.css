@@ -234,7 +234,7 @@ nav a:hover {
   line-height: 1.1;
   margin-bottom: var(--spacing-md);
   font-weight: 400;
-  color: var(--color-white);
+  color: #ffffff !important; /* Force white text always */
   opacity: 0;
   animation: fadeInUp 1s ease forwards 0.5s;
 }
