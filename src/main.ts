@@ -57,11 +57,11 @@ const Header = (): string => `
 `;
 
 // Theme Toggle Logic
+// Theme Toggle Logic
 function initTheme() {
   const savedTheme = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  
-  if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+  // Default to light mode, only enable dark if explicitly saved
+  if (savedTheme === 'dark') {
     document.body.classList.add('dark-mode');
   }
   updateThemeIcon();
@@ -125,10 +125,10 @@ const RetailPage = (): string => `
     </p>
 
     <!-- Category Filter Buttons -->
-    <div style="display: flex; justify-content: center; margin-bottom: 2rem; gap: 1rem;">
-      <button class="filter-btn active" data-filter="all" style="padding: 0.5rem 1.5rem; border-radius: 25px; border: 1px solid var(--color-primary); background: var(--color-primary); color: white; cursor: pointer; font-family: var(--font-sans);">All</button>
-      <button class="filter-btn" data-filter="Masala" style="padding: 0.5rem 1.5rem; border-radius: 25px; border: 1px solid #ddd; background: transparent; color: var(--color-text); cursor: pointer; font-family: var(--font-sans);">Masalas</button>
-      <button class="filter-btn" data-filter="Spice" style="padding: 0.5rem 1.5rem; border-radius: 25px; border: 1px solid #ddd; background: transparent; color: var(--color-text); cursor: pointer; font-family: var(--font-sans);">Spices</button>
+    <div class="filter-container">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="Masala">Masalas</button>
+      <button class="filter-btn" data-filter="Spice">Spices</button>
     </div>
 
     <div style="max-width: 500px; margin: 0 auto 3rem auto; position: relative;">

@@ -404,3 +404,80 @@ footer {
   font-size: 0.9rem;
   border-top: 2px solid var(--color-primary);
 }
+
+/* --- Filter Buttons --- */
+.filter-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all 0.3s ease;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: white;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  :root {
+    --header-height: auto;
+    --spacing-xl: 3rem;
+  }
+
+  /* Header & Nav */
+  header {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  nav ul {
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 0;
+  }
+
+  nav a {
+    font-size: 0.8rem;
+  }
+
+  /* Hero */
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-tagline {
+    font-size: 0.8rem;
+  }
+
+  /* Content */
+  .section-container {
+    padding: var(--spacing-xl) 1.5rem;
+  }
+
+  .page-title {
+    font-size: 2.2rem;
+  }
+
+  /* Grid */
+  .retail-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+}
