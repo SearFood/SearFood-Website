@@ -45,10 +45,48 @@ const Header = (): string => `
         <li><a href="/retail" data-link="retail" class="${currentPage === 'retail' ? 'active' : ''}">Retail</a></li>
         <li><a href="/exports" data-link="exports" class="${currentPage === 'exports' ? 'active' : ''}">Exports</a></li>
         <li><a href="/contact" data-link="contact" class="${currentPage === 'contact' ? 'active' : ''}">Contact Us</a></li>
+        <li>
+          <button id="theme-toggle" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; color: var(--color-text);">
+            <span class="icon-moon">🌙</span>
+            <span class="icon-sun" style="display: none;">☀️</span>
+          </button>
+        </li>
       </ul>
     </nav>
   </header>
 `;
+
+// Theme Toggle Logic
+function initTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  
+  if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+    document.body.classList.add('dark-mode');
+  }
+  updateThemeIcon();
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  updateThemeIcon();
+}
+
+function updateThemeIcon() {
+  const isDark = document.body.classList.contains('dark-mode');
+  const btn = document.getElementById('theme-toggle');
+  if (btn) {
+    const moon = btn.querySelector('.icon-moon') as HTMLElement;
+    const sun = btn.querySelector('.icon-sun') as HTMLElement;
+    if (moon && sun) {
+      moon.style.display = isDark ? 'none' : 'block';
+      sun.style.display = isDark ? 'block' : 'none';
+      btn.style.color = isDark ? '#fff' : 'var(--color-text)'; // Ensure visibility
+    }
+  }
+}
 
 const HomePage = (): string => `
   <section class="hero-cinematic">
@@ -86,12 +124,19 @@ const RetailPage = (): string => `
       Elevate your home cooking with our premium range.
     </p>
 
+    <!-- Category Filter Buttons -->
+    <div style="display: flex; justify-content: center; margin-bottom: 2rem; gap: 1rem;">
+      <button class="filter-btn active" data-filter="all" style="padding: 0.5rem 1.5rem; border-radius: 25px; border: 1px solid var(--color-primary); background: var(--color-primary); color: white; cursor: pointer; font-family: var(--font-sans);">All</button>
+      <button class="filter-btn" data-filter="Masala" style="padding: 0.5rem 1.5rem; border-radius: 25px; border: 1px solid #ddd; background: transparent; color: var(--color-text); cursor: pointer; font-family: var(--font-sans);">Masalas</button>
+      <button class="filter-btn" data-filter="Spice" style="padding: 0.5rem 1.5rem; border-radius: 25px; border: 1px solid #ddd; background: transparent; color: var(--color-text); cursor: pointer; font-family: var(--font-sans);">Spices</button>
+    </div>
+
     <div style="max-width: 500px; margin: 0 auto 3rem auto; position: relative;">
       <input type="text" id="retail-search" placeholder="Search products..." style="width: 100%; padding: 1rem 1.5rem; border-radius: 50px; border: 1px solid #ddd; font-family: var(--font-sans); font-size: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); outline: none;" />
       <span style="position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); color: #ccc;">🔍</span>
     </div>
     
-    <div id="retail-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem;">
+    <div id="retail-grid" class="retail-grid">
       <!-- Grid populated by JS -->
     </div>
   </section>
@@ -102,19 +147,19 @@ function renderRetailGrid(items: Recipe[]) {
   if (!grid) return;
   
   if (items.length === 0) {
-    grid.innerHTML = '<p style="text-align: center; grid-column: 1/-1; color: #999;">No products found.</p>';
+    grid.innerHTML = '<p style="text-align: center; grid-column: 1/-1; color: var(--color-text-light);">No products found.</p>';
     return;
   }
 
   grid.innerHTML = items.map((recipe: Recipe) => `
-    <div style="background: #f9f9f9; padding: 2rem 1rem; text-align: center; transition: transform 0.2s;">
-      <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; font-family: var(--font-sans); color: #333;">${recipe.title}</h3>
+    <div class="retail-card">
+      <h3 class="retail-title">${recipe.title}</h3>
       
-      <div style="height: 200px; margin-bottom: 1.5rem; overflow: hidden; border-radius: 4px;">
-        <img src="${recipe.image}" alt="${recipe.title}" style="width: 100%; height: 100%; object-fit: cover;" />
+      <div class="retail-image-container">
+        <img src="${recipe.image}" alt="${recipe.title}" loading="lazy" />
       </div>
       
-      <p style="color: #666; font-size: 0.95rem; line-height: 1.6; max-width: 90%; margin: 0 auto;">
+      <p class="retail-desc">
         ${recipe.description}
       </p>
     </div>
@@ -138,20 +183,51 @@ const ContactPage = (): string => `
     <h1 class="page-title">Get in Touch</h1>
     <p style="text-align: center; margin-bottom: 3rem;">Have a query about bulk orders or retail partnerships?</p>
     
-    <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you! We will reach out shortly.');">
+    <div id="contact-response" style="max-width: 600px; margin: 0 auto; text-align: center; display: none;">
+      <h3 style="color: var(--color-primary); margin-bottom: 1rem;">Message Sent!</h3>
+      <p>Thank you for reaching out. Our team will get back to you within 24 hours.</p>
+      <button onclick="resetContactForm()" class="btn-primary" style="margin-top: 2rem;">Send Another</button>
+    </div>
+
+    <form id="contact-form" class="contact-form">
       <div class="form-group">
-        <input type="text" placeholder="Name" required />
+        <input type="text" id="contact-name" placeholder="Name" required />
       </div>
       <div class="form-group">
-        <input type="email" placeholder="Email Address" required />
+        <input type="email" id="contact-email" placeholder="Email Address" required />
       </div>
       <div class="form-group">
-        <textarea rows="5" placeholder="How can we help?" required></textarea>
+        <textarea id="contact-message" rows="5" placeholder="How can we help?" required></textarea>
       </div>
       <button type="submit" class="btn-primary">Send Message</button>
     </form>
   </section>
 `;
+
+// Contact Form Handler
+function handleContactSubmit(e: Event) {
+  e.preventDefault();
+  const form = document.getElementById('contact-form');
+  const response = document.getElementById('contact-response');
+  
+  // Here we would normally send data to backend
+  // For now, simulate success
+  if (form && response) {
+    form.style.display = 'none';
+    response.style.display = 'block';
+  }
+}
+
+// Global scope for onclick
+(window as any).resetContactForm = () => {
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const response = document.getElementById('contact-response');
+  if (form && response) {
+    form.reset();
+    form.style.display = 'flex';
+    response.style.display = 'none';
+  }
+};
 
 const Footer = (): string => `
   <footer>
@@ -193,17 +269,53 @@ function render() {
 
   // Page Specific Logic
   if (currentPage === 'retail') {
+    let currentFilter = 'all';
+    
+    // Initial Render
     renderRetailGrid(recipes);
-    const searchInput = document.getElementById('retail-search');
-    searchInput?.addEventListener('input', (e) => {
-      const query = (e.target as HTMLInputElement).value.toLowerCase();
-      const filtered = recipes.filter(r => 
-        r.title.toLowerCase().includes(query) || 
-        r.description.toLowerCase().includes(query)
-      );
+
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const searchInput = document.getElementById('retail-search') as HTMLInputElement;
+
+    const applyFilters = () => {
+      const query = searchInput ? searchInput.value.toLowerCase() : '';
+      const filtered = recipes.filter(r => {
+        const matchesSearch = r.title.toLowerCase().includes(query) || r.description.toLowerCase().includes(query);
+        const matchesCategory = currentFilter === 'all' || r.category === currentFilter;
+        return matchesSearch && matchesCategory;
+      });
       renderRetailGrid(filtered);
+    };
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLButtonElement;
+        
+        // UI Update
+        filterBtns.forEach(b => {
+          (b as HTMLButtonElement).style.background = 'transparent';
+          (b as HTMLButtonElement).style.color = 'var(--color-text)';
+          (b as HTMLButtonElement).style.border = '1px solid #ddd';
+        });
+        target.style.background = 'var(--color-primary)';
+        target.style.color = 'white';
+        target.style.border = '1px solid var(--color-primary)';
+
+        currentFilter = target.getAttribute('data-filter') || 'all';
+        applyFilters();
+      });
     });
+
+    searchInput?.addEventListener('input', applyFilters);
   }
+
+  if (currentPage === 'contact') {
+    document.getElementById('contact-form')?.addEventListener('submit', handleContactSubmit);
+  }
+
+  // Theme Listener
+  document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+  updateThemeIcon(); // Ensure correct icon state after re-render
 }
 
 // Boot
@@ -211,4 +323,5 @@ const path = window.location.pathname.replace('/', '');
 if (['retail', 'exports', 'contact'].includes(path)) {
   currentPage = path as PageName;
 }
+initTheme(); // Initialize dark mode preference
 render();
