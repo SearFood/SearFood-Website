@@ -87,7 +87,9 @@ body {
   line-height: 1.6;
   background-color: var(--color-white);
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 h1,
@@ -398,7 +400,7 @@ nav a:hover {
 
 /* Footer */
 footer {
-  background: var(--color-black);
+  background: #000000;
   color: var(--color-text-light);
   padding: 4rem 5%;
   text-align: center;
