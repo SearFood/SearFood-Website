@@ -207,107 +207,108 @@ const HomePage = (): string => `
 `;
 
 const RetailPage = (): string => `
-  <section class="section-container">
-    <h1 class="page-title">Retail Products</h1>
-    <p style="text-align: center; max-width: 600px; margin: 0 auto; margin-bottom: 2rem;">
-      Elevate your home cooking with our premium range.
-    </p>
-
-    <!-- Category Filter Buttons -->
-    <div class="filter-container">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="Masala">Masalas</button>
-      <button class="filter-btn" data-filter="Spice">Spices</button>
+  <section class="page-head">
+    <div class="wrap" data-io>
+      <p class="eyebrow reveal">Retail</p>
+      <h1><span class="line"><span>The <em>pantry</em></span></span><span class="line"><span style="transition-delay:.08s">collection.</span></span></h1>
+      <p class="lede reveal" style="--d:.3s">Elevate your home cooking with our premium range of masalas and spices.</p>
     </div>
-
-    <div style="max-width: 500px; margin: 0 auto 3rem auto; position: relative;">
-      <input type="text" id="retail-search" placeholder="Search products..." style="width: 100%; padding: 1rem 1.5rem; border-radius: 50px; border: 1px solid #ddd; font-family: var(--font-sans); font-size: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); outline: none;" />
-      <span style="position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); color: #ccc;">🔍</span>
+  </section>
+  <section class="wrap" style="padding-bottom: clamp(4rem, 9vw, 8rem)">
+    <div class="toolbar">
+      <div class="filter-container">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="Masala">Masalas</button>
+        <button class="filter-btn" data-filter="Spice">Spices</button>
+      </div>
+      <label class="search">${ICON.search}<input type="text" id="retail-search" placeholder="Search products" aria-label="Search products" /></label>
     </div>
-    
-    <div id="retail-grid" class="retail-grid">
-      <!-- Grid populated by JS -->
-    </div>
+    <div id="retail-grid" class="retail-grid"></div>
   </section>
 `;
 
 function renderRetailGrid(items: Recipe[]) {
   const grid = document.getElementById('retail-grid');
   if (!grid) return;
-  
   if (items.length === 0) {
-    grid.innerHTML = '<p style="text-align: center; grid-column: 1/-1; color: var(--color-text-light);">No products found.</p>';
+    grid.innerHTML = '<p class="empty">Nothing matches that — try another word.</p>';
     return;
   }
-
-  grid.innerHTML = items.map((recipe: Recipe) => `
-    <div class="retail-card">
-      <h3 class="retail-title">${recipe.title}</h3>
-      
+  grid.innerHTML = items.map((r, i) => `
+    <article class="retail-card" style="--i:${i}">
       <div class="retail-image-container">
-        <img src="${recipe.image}" alt="${recipe.title}" loading="lazy" />
+        <img src="${r.image}" alt="${r.title}" loading="lazy" referrerpolicy="no-referrer" />
+        <span class="tag">${r.category}</span>
       </div>
-      
-      <p class="retail-desc truncated" id="desc-${recipe.id}">
-        ${recipe.description}
-      </p>
-      <button class="read-more-btn" onclick="toggleDescription(${recipe.id})">Read More</button>
-    </div>
+      <div class="card-body">
+        <h3 class="retail-title">${r.title}</h3>
+        <p class="retail-desc truncated" id="desc-${r.id}">${r.description}</p>
+        <button class="read-more-btn" data-toggle="${r.id}">Read more</button>
+      </div>
+    </article>
   `).join('');
 }
 
-// Global toggle function
-(window as any).toggleDescription = (id: number) => {
-  const desc = document.getElementById(`desc-${id}`);
-  const btn = desc?.nextElementSibling as HTMLButtonElement;
-  
-  if (desc && btn) {
-    const isTruncated = desc.classList.contains('truncated');
-    if (isTruncated) {
-      desc.classList.remove('truncated');
-      btn.textContent = 'Read Less';
-    } else {
-      desc.classList.add('truncated');
-      btn.textContent = 'Read More';
-    }
-  }
-};
-
 const ExportsPage = (): string => `
-  <section class="section-container">
-    <h1 class="page-title">Global Exports</h1>
-    <p style="text-align: center; max-width: 700px; margin: 0 auto;">
-      We manage end-to-end logistics for bulk orders across 20+ countries. Our commitment to quality ensures freshness at every port.
-    </p>
-    <div style="margin-top: 4rem; height: 300px; border: 1px dashed rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.5);">
-      [Interactive Global Map / Certifications Placeholder]
+  <section class="page-head">
+    <div class="wrap" data-io>
+      <p class="eyebrow reveal">Global exports</p>
+      <h1><span class="line"><span>From our</span></span><span class="line"><span style="transition-delay:.08s">soil to <em>your port.</em></span></span></h1>
+      <p class="lede reveal" style="--d:.3s">We manage end-to-end logistics for bulk orders. Our commitment to quality ensures freshness at every port.</p>
+    </div>
+  </section>
+  <section class="wrap" style="padding-bottom: clamp(4rem, 9vw, 8rem)">
+    <div class="stats" data-io>
+      <div class="stat reveal"><strong><span data-count="20">0</span>+</strong><span>Countries served with bulk orders</span></div>
+      <div class="stat reveal" style="--d:.1s"><strong><span data-count="3">0</span></strong><span>Product families: masalas, spices, dehydrated foods</span></div>
+      <div class="stat reveal" style="--d:.2s"><strong>A→Z</strong><span>End-to-end logistics, handled by us</span></div>
+    </div>
+    <div class="steps" data-io>
+      ${[
+        ['01', 'Source', 'Single-origin ingredients from the regions that perfected them.'],
+        ['02', 'Process', 'Cleaned, dried, ground and blended with traditional methods.'],
+        ['03', 'Pack', 'Packed for freshness and shelf life, built for long journeys.'],
+        ['04', 'Ship', 'Documentation and freight arranged to your destination port.'],
+      ].map(([n, t, d], i) => `<div class="step reveal" style="--d:${i * 0.1}s"><span class="n">${n}</span><div><h3>${t}</h3><p>${d}</p></div></div>`).join('')}
+    </div>
+    <div class="cta-band reveal" data-io>
+      <h2>Planning a bulk order?</h2>
+      <a href="/contact" data-link="contact" class="btn magnetic">Talk to our team ${ICON.arrow}</a>
     </div>
   </section>
 `;
 
 const ContactPage = (): string => `
-  <section class="section-container">
-    <h1 class="page-title">Get in Touch</h1>
-    <p style="text-align: center; margin-bottom: 3rem;">Have a query about bulk orders or retail partnerships?</p>
-    
-    <div id="contact-response" style="max-width: 600px; margin: 0 auto; text-align: center; display: none;">
-      <h3 style="color: var(--color-primary); margin-bottom: 1rem;">Message Sent!</h3>
-      <p>Thank you for reaching out. Our team will get back to you within 24 hours.</p>
-      <button onclick="resetContactForm()" class="btn-primary" style="margin-top: 2rem;">Send Another</button>
+  <section class="page-head">
+    <div class="wrap" data-io>
+      <p class="eyebrow reveal">Contact</p>
+      <h1><span class="line"><span>Get in</span></span><span class="line"><span style="transition-delay:.08s"><em>touch.</em></span></span></h1>
     </div>
-
-    <form id="contact-form" class="contact-form">
-      <div class="form-group">
-        <input type="text" id="contact-name" placeholder="Name" required />
+  </section>
+  <section class="wrap" style="padding-bottom: clamp(4rem, 9vw, 8rem)">
+    <div class="contact-grid">
+      <div data-io>
+        <p class="lede reveal">Have a query about bulk orders or retail partnerships? Tell us a little and we’ll take it from there.</p>
+        <div class="contact-info reveal" style="--d:.2s">
+          <div><small>Response time</small><p>Within 24 hours</p></div>
+          <div><small>For</small><p>Bulk orders &amp; retail partnerships</p></div>
+          <div><small>Shipping</small><p>Worldwide</p></div>
+        </div>
       </div>
-      <div class="form-group">
-        <input type="email" id="contact-email" placeholder="Email Address" required />
+      <div class="reveal" data-io style="--d:.15s">
+        <div id="contact-response">
+          <h3>Message sent.</h3>
+          <p>Thank you for reaching out. Our team will get back to you within 24 hours.</p>
+          <button onclick="resetContactForm()" class="btn btn-ghost">Send another</button>
+        </div>
+        <form id="contact-form" class="contact-form">
+          <div class="form-group"><label for="contact-name">Name</label><input type="text" id="contact-name" required autocomplete="name" /></div>
+          <div class="form-group"><label for="contact-email">Email</label><input type="email" id="contact-email" required autocomplete="email" /></div>
+          <div class="form-group"><label for="contact-message">How can we help?</label><textarea id="contact-message" rows="4" required></textarea></div>
+          <button type="submit" class="btn btn-primary magnetic">Send message ${ICON.arrow}</button>
+        </form>
       </div>
-      <div class="form-group">
-        <textarea id="contact-message" rows="5" placeholder="How can we help?" required></textarea>
-      </div>
-      <button type="submit" class="btn-primary">Send Message</button>
-    </form>
+    </div>
   </section>
 `;
 
