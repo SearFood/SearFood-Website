@@ -114,34 +114,51 @@ const Footer = (): string => `
 `;
 
 // ---------- Pages ----------
-const HomePage = (): string => `
-  <section class="hero-cinematic">
-    <!-- Updated background to a high-quality ingredients shot -->
-    <div class="hero-bg" style="background-image: url('https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=2500');"></div>
-    <div class="hero-overlay-content">
-      <p class="hero-tagline">Welcome to Sear Food</p>
-      <h1 class="hero-title">Producers to Global Consumers</h1>
-      <a href="/retail" data-link="retail" class="hero-cta">Explore Collection</a>
-    </div>
-  </section>
-  
-  <section class="section-container" style="background-color: #f8f8f8;">
-    <h2 class="page-title" style="font-size: 2.5rem; margin-bottom: 2rem;">About Us</h2>
-    
-    <div style="max-width: 800px; margin: 0 auto; text-align: center; padding: 0 1rem;">
-      <p style="font-family: var(--font-serif); font-size: 1.25rem; line-height: 1.8; color: #444; margin-bottom: 2rem;">
-        Hello! We are <strong style="color: var(--color-primary);">Sear Food</strong>, passionate about bringing you authentic masalas, spices, and traditional dishes from across India. From <strong>Kanyakumari to Kashmir</strong>, and <strong>Gujarat to Arunachal Pradesh</strong>, we revive rare flavors from the heartlands of the country. Our offerings are rooted in ancestral wisdom, with each recipe and ingredient specific to its region and passed down through generations.
-      </p>
-      <p style="font-family: var(--font-serif); font-size: 1.25rem; line-height: 1.8; color: #444; margin-bottom: 2rem;">
-        From the royal culinary traditions of <em>Chhatrapati Shivaji Maharaj’s Maratha region</em> to the rich heritage of the <em>Ahom dynasty of Northeast India</em>, every dish is our tribute to the land and the people who preserved these timeless practices. Through Sear Food, we celebrate India’s history and culture by sharing these treasured flavors with the world.
-      </p>
-      <p style="font-family: var(--font-serif); font-size: 1.4rem; font-style: italic; color: var(--color-primary); font-weight: bold;">
-        Come, experience, and enjoy the taste of tradition
-      </p>
-    </div>
-  </section>
-`;
+const spiceWords = ['Lakadong Turmeric', 'Iyengar Sambar', 'True Cinnamon', 'Gujarati Chai Masala', 'Mustard Seeds', 'Cardamom', 'Bhaji Masala', 'Black Pepper', 'Star Anise', 'Rasam Powder'];
+const marqueeSet = spiceWords.map(w => `<span>${w}</span>`).join('');
 
+const HomePage = (): string => `
+  <section class="hero" data-io>
+    <div class="hero-bg" data-parallax="0.12"><div class="hero-photo"></div></div>
+    <div class="seal">
+      <svg class="seal-ring" viewBox="0 0 120 120">
+        <defs><path id="circ" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
+        <text><textPath href="#circ" textLength="286" lengthAdjust="spacing">Sear Food · Heritage Spices · Farm to World ·</textPath></text>
+      </svg>
+      <div class="seal-core">${ICON.leaf}</div>
+    </div>
+    <div class="wrap">
+      <p class="eyebrow reveal">Producers to global consumers</p>
+      <h1>
+        <span class="line"><span>Taste the</span></span>
+        <span class="line"><span style="transition-delay:.1s"><em>tradition.</em></span></span>
+      </h1>
+      <div class="hero-bottom reveal" style="--d:.5s">
+        <p class="lede">Authentic masalas, single-origin spices and dehydrated foods, rooted in ancestral recipes from the heartlands of India.</p>
+        <div class="hero-actions">
+          <a href="/retail" data-link="retail" class="btn btn-primary magnetic">Explore the collection ${ICON.arrow}</a>
+          <a href="/exports" data-link="exports" class="btn btn-ghost magnetic">Export enquiries</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">${marqueeSet}${marqueeSet}</div>
+  </div>
+
+  <section class="section">
+    <div class="wrap about-grid">
+      <div data-io><p class="eyebrow reveal">About us</p></div>
+      <div>
+        <p class="about-scrub" data-scrub>Hello! We are <em>Sear Food</em>, passionate about bringing you authentic masalas, spices and traditional dishes from across India. From Kanyakumari to Kashmir, and Gujarat to Arunachal Pradesh, we revive rare flavors from the heartlands of the country, each recipe specific to its region and passed down through generations.</p>
+        <p class="about-more reveal" data-io>From the royal culinary traditions of Chhatrapati Shivaji Maharaj’s Maratha region to the rich heritage of the Ahom dynasty of Northeast India, every dish is our tribute to the land and the people who preserved these timeless practices. Through Sear Food, we celebrate India’s history and culture by sharing these treasured flavors with the world.</p>
+      </div>
+    </div>
+  </section>
+
+  
+`;
 
 const RetailPage = (): string => `
   <section class="section-container">
