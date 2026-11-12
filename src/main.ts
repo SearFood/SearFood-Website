@@ -1,124 +1,119 @@
 import '../style.css'
 import { recipes, Recipe } from './mockData'
 
-// Types
+// ---------- Types / state ----------
 type PageName = 'home' | 'retail' | 'exports' | 'contact';
+interface RouteState { page: PageName; }
 
-interface RouteState {
-  page: PageName;
-}
-
-// State
 let currentPage: PageName = 'home';
+let ready = false; // intro finished
+let transitioning = false;
 
-// DOM Elements
 const app = document.querySelector<HTMLDivElement>('#app');
-
 if (!app) throw new Error('App root not found');
 
-// Navigation Handler
-function navigate(page: PageName) {
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches; // used for magnetic buttons
+const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
+
+// ---------- Icons ----------
+const ICON = {
+  arrow: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`,
+  moon: `<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`,
+  sun: `<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`,
+  menu: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 9h16M4 15h16"/></svg>`,
+  search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`,
+  leaf: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-9 5-14 15-14 0 10-5 15-14 15"/><path d="M5 19c3-5 6-8 10-10"/></svg>`,
+};
+
+// ---------- Navigation ----------
+async function navigate(page: PageName) {
+  if (transitioning || (page === currentPage && ready)) return;
+  transitioning = true;
+  const curtain = document.querySelector<HTMLElement>('.curtain');
+  document.querySelector('nav')?.classList.remove('nav-active');
+
+  if (curtain && !reduceMotion) {
+    curtain.className = 'curtain in';
+    await wait(680);
+  }
   currentPage = page;
-  render();
   window.history.pushState({ page }, '', `/${page === 'home' ? '' : page}`);
+  render();
   window.scrollTo(0, 0);
+  if (curtain && !reduceMotion) {
+    curtain.className = 'curtain out';
+    await wait(720);
+    curtain.className = 'curtain';
+  }
+  transitioning = false;
 }
 
-// Initial Load Handling
 window.addEventListener('popstate', (e: PopStateEvent) => {
   const state = e.state as RouteState;
   currentPage = state?.page || 'home';
   render();
+  window.scrollTo(0, 0);
 });
 
-// Components
+// ---------- Shared components ----------
+const link = (page: PageName, label: string) =>
+  `<li><a href="/${page === 'home' ? '' : page}" data-link="${page}" class="nav-link ${currentPage === page ? 'active' : ''}" data-text="${label}">${label}</a></li>`;
+
 const Header = (): string => `
   <header>
-    <div class="logo-container">
-      <a href="/" data-link="home">
-        <img src="/logo.png" alt="SearFood Logo" class="logo-img" />
+    <div class="wrap header-inner">
+      <a href="/" data-link="home" class="brand" aria-label="Sear Food home">
+        <img src="/logo.png" alt="Sear Food" class="logo-img" />
       </a>
+      <nav>
+        <ul>
+          ${link('home', 'Home')}
+          ${link('retail', 'Retail')}
+          ${link('exports', 'Exports')}
+          ${link('contact', 'Contact Us')}
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle" aria-label="Toggle dark mode">${ICON.moon}${ICON.sun}</button>
+        <button class="mobile-menu-btn" aria-label="Open menu">${ICON.menu}</button>
+      </div>
     </div>
-    
-    <div class="header-controls">
-      <!-- Mobile Theme Toggle -->
-      <button class="theme-toggle mobile-toggle" aria-label="Toggle Dark Mode">
-        <span class="icon-moon">🌙</span>
-        <span class="icon-sun" style="display: none;">☀️</span>
-      </button>
-      
-      <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Open Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-
-    <nav>
-      <ul>
-        <li><a href="/" data-link="home" class="${currentPage === 'home' ? 'active' : ''}">Home</a></li>
-        <li><a href="/retail" data-link="retail" class="${currentPage === 'retail' ? 'active' : ''}">Retail</a></li>
-        <li><a href="/exports" data-link="exports" class="${currentPage === 'exports' ? 'active' : ''}">Exports</a></li>
-        <li><a href="/contact" data-link="contact" class="${currentPage === 'contact' ? 'active' : ''}">Contact Us</a></li>
-        <!-- Desktop Theme Toggle -->
-        <li class="desktop-toggle-li">
-          <button class="theme-toggle desktop-toggle" aria-label="Toggle Dark Mode">
-            <span class="icon-moon">🌙</span>
-            <span class="icon-sun" style="display: none;">☀️</span>
-          </button>
-        </li>
-      </ul>
-    </nav>
   </header>
 `;
 
-// Mobile Menu Toggle
-(window as any).toggleMobileMenu = () => {
-  const nav = document.querySelector('nav');
-  const btn = document.querySelector('.mobile-menu-btn');
-  nav?.classList.toggle('nav-active');
-  btn?.classList.toggle('active');
-};
+const Footer = (): string => `
+  <footer>
+    <div class="wrap">
+      <a href="/contact" data-link="contact" class="footer-cta">Let’s taste<br/>something <em>real.</em></a>
+      <div class="footer-grid">
+        <div>
+          <div class="brand"><img src="/logo.png" alt="" class="logo-img" /><span class="brand-name">Sear Food</span></div>
+          <p>Producers to global consumers. Spices, seasonings and dehydrated foods from the heartlands of India.</p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="/retail" data-link="retail">Retail</a></li>
+            <li><a href="/exports" data-link="exports">Exports</a></li>
+            <li><a href="/contact" data-link="contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Collections</h4>
+          <ul>
+            <li><a href="/retail" data-link="retail">Masalas</a></li>
+            <li><a href="/retail" data-link="retail">Spices</a></li>
+            <li><a href="/exports" data-link="exports">Dehydrated foods</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom"><span>&copy; ${new Date().getFullYear()} Sear Food. All rights reserved.</span><span>Kanyakumari → Kashmir</span></div>
+    </div>
+  </footer>
+`;
 
-// Theme Toggle Logic
-function initTheme() {
-  const savedTheme = localStorage.getItem('theme');
-  // Default to light mode, only enable dark if explicitly saved
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark-mode');
-  }
-  updateThemeIcon();
-  
-  // Attach listeners to ALL toggle buttons
-  // Using event delegation or re-attaching after render isn't needed if we attach in render()
-  // But initTheme runs once on boot. We need to attach listeners in render() actually.
-}
-
-function toggleTheme() {
-  document.body.classList.toggle('dark-mode');
-  const isDark = document.body.classList.contains('dark-mode');
-  localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  updateThemeIcon();
-}
-
-function updateThemeIcon() {
-  const isDark = document.body.classList.contains('dark-mode');
-  // Update ALL toggle buttons
-  document.querySelectorAll('.theme-toggle').forEach(btn => {
-    const moon = btn.querySelector('.icon-moon') as HTMLElement;
-    const sun = btn.querySelector('.icon-sun') as HTMLElement;
-    if (moon && sun) {
-      if (isDark) {
-        moon.style.display = 'none';
-        sun.style.display = 'inline';
-      } else {
-        moon.style.display = 'inline';
-        sun.style.display = 'none';
-      }
-    }
-  });
-}
-
+// ---------- Pages ----------
 const HomePage = (): string => `
   <section class="hero-cinematic">
     <!-- Updated background to a high-quality ingredients shot -->
@@ -253,126 +248,204 @@ const ContactPage = (): string => `
   </section>
 `;
 
-// Contact Form Handler
+// ---------- Handlers ----------
+(window as any).resetContactForm = () => {
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const response = document.getElementById('contact-response');
+  if (form && response) { form.reset(); form.style.display = 'flex'; response.style.display = 'none'; }
+};
+
 function handleContactSubmit(e: Event) {
   e.preventDefault();
   const form = document.getElementById('contact-form');
   const response = document.getElementById('contact-response');
-  
-  // Here we would normally send data to backend
-  // For now, simulate success
-  if (form && response) {
-    form.style.display = 'none';
-    response.style.display = 'block';
-  }
+  // Placeholder: no backend yet, simulate success
+  if (form && response) { form.style.display = 'none'; response.style.display = 'block'; }
 }
 
-// Global scope for onclick
-(window as any).resetContactForm = () => {
-  const form = document.getElementById('contact-form') as HTMLFormElement;
-  const response = document.getElementById('contact-response');
-  if (form && response) {
-    form.reset();
-    form.style.display = 'flex';
-    response.style.display = 'none';
-  }
-};
+function toggleTheme() {
+  document.body.classList.toggle('dark-mode');
+  try { localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); } catch { /* ignore */ }
+}
 
-const Footer = (): string => `
-  <footer>
-    <div class="logo-container" style="justify-content: center; margin-bottom: 1rem;">
-      <img src="/logo.png" alt="SearFood" style="height: 40px; opacity: 0.5; filter: grayscale(100%);" />
-    </div>
-    <p>Copyright &copy; 2025 SearFood - All Rights Reserved.</p>
-  </footer>
-`;
-
-// Router Logic
+// ---------- Render ----------
 function render() {
-  let content = '';
-  switch(currentPage) {
-    case 'home': content = HomePage(); break;
-    case 'retail': content = RetailPage(); break;
-    case 'exports': content = ExportsPage(); break;
-    case 'contact': content = ContactPage(); break;
-    default: content = HomePage();
-  }
-  
-  if (app) {
-    app.innerHTML = `
-      ${Header()}
-      <main>${content}</main>
-      ${Footer()}
-    `;
-  }
-  
-  // Re-attach event listeners
-  document.querySelectorAll('a[data-link]').forEach(anchor => {
-    anchor.addEventListener('click', (e) => {
+  const pages: Record<PageName, () => string> = { home: HomePage, retail: RetailPage, exports: ExportsPage, contact: ContactPage };
+  app!.innerHTML = `${Header()}<main>${(pages[currentPage] || HomePage)()}</main>${Footer()}`;
+
+  app!.querySelectorAll('a[data-link]').forEach(a => {
+    a.addEventListener('click', e => {
       e.preventDefault();
-      const target = e.currentTarget as HTMLAnchorElement;
-      const page = target.getAttribute('data-link') as PageName;
-      if (page) navigate(page);
+      navigate((a as HTMLElement).dataset.link as PageName);
     });
   });
+  app!.querySelectorAll('.theme-toggle').forEach(b => b.addEventListener('click', toggleTheme));
+  app!.querySelector('.mobile-menu-btn')?.addEventListener('click', () => app!.querySelector('nav')?.classList.toggle('nav-active'));
 
-  // Page Specific Logic
   if (currentPage === 'retail') {
     let currentFilter = 'all';
-    
-    // Initial Render
     renderRetailGrid(recipes);
-
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const searchInput = document.getElementById('retail-search') as HTMLInputElement;
-
-    const applyFilters = () => {
-      const query = searchInput ? searchInput.value.toLowerCase() : '';
-      const filtered = recipes.filter(r => {
-        const matchesSearch = r.title.toLowerCase().includes(query);
-        const matchesCategory = currentFilter === 'all' || r.category === currentFilter;
-        return matchesSearch && matchesCategory;
-      });
-      renderRetailGrid(filtered);
+    const btns = app!.querySelectorAll<HTMLButtonElement>('.filter-btn');
+    const input = document.getElementById('retail-search') as HTMLInputElement | null;
+    const apply = () => {
+      const q = (input?.value || '').toLowerCase();
+      renderRetailGrid(recipes.filter(r =>
+        r.title.toLowerCase().includes(q) && (currentFilter === 'all' || r.category === currentFilter)));
     };
-
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const target = e.currentTarget as HTMLButtonElement;
-        
-        // UI Update
-        filterBtns.forEach(b => {
-          (b as HTMLButtonElement).style.background = 'transparent';
-          (b as HTMLButtonElement).style.color = 'var(--color-text)';
-          (b as HTMLButtonElement).style.border = '1px solid #ddd';
-        });
-        target.style.background = 'var(--color-primary)';
-        target.style.color = 'white';
-        target.style.border = '1px solid var(--color-primary)';
-
-        currentFilter = target.getAttribute('data-filter') || 'all';
-        applyFilters();
-      });
+    btns.forEach(btn => btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter || 'all';
+      apply();
+    }));
+    input?.addEventListener('input', apply);
+    document.getElementById('retail-grid')?.addEventListener('click', e => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-toggle]');
+      if (!btn) return;
+      const desc = document.getElementById(`desc-${btn.dataset.toggle}`);
+      const open = desc?.classList.toggle('truncated') === false;
+      btn.textContent = open ? 'Read less' : 'Read more';
     });
-
-    searchInput?.addEventListener('input', applyFilters);
   }
-
   if (currentPage === 'contact') {
     document.getElementById('contact-form')?.addEventListener('submit', handleContactSubmit);
   }
 
-  // Theme Listener
-  document.querySelectorAll('.theme-toggle').forEach(btn => {
-    btn.addEventListener('click', toggleTheme);
-  });
-  updateThemeIcon(); // Ensure correct icon state after re-render
+  setupPage();
 }
 
-// Boot
-const path = window.location.pathname.replace('/', '');
-if (['retail', 'exports', 'contact'].includes(path)) {
-  currentPage = path as PageName;
+// ---------- Motion ----------
+let pending: HTMLElement[] = [];
+let scrubEls: HTMLElement[][] = [];
+let parallaxEls: HTMLElement[] = [];
+let marquee: HTMLElement | null = null;
+let marqueeX = 0;
+
+function setupPage() {
+  // Split scrub text into words
+  scrubEls = [];
+  app!.querySelectorAll<HTMLElement>('[data-scrub]').forEach(el => {
+    const wrapWords = (node: Node) => {
+      Array.from(node.childNodes).forEach(child => {
+        if (child.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          (child.textContent || '').split(/(\s+)/).forEach(part => {
+            if (!part.trim()) { frag.appendChild(document.createTextNode(part)); return; }
+            const s = document.createElement('span'); s.className = 'w'; s.textContent = part; frag.appendChild(s);
+          });
+          child.replaceWith(frag);
+        } else wrapWords(child);
+      });
+    };
+    wrapWords(el);
+    scrubEls.push(Array.from(el.querySelectorAll<HTMLElement>('.w')));
+  });
+
+  parallaxEls = Array.from(app!.querySelectorAll<HTMLElement>('[data-parallax]'));
+  marquee = app!.querySelector<HTMLElement>('.marquee-track');
+  marqueeX = 0;
+
+  // Reveal on view (checked every frame once the intro is done; no IntersectionObserver dependency)
+  pending = [];
+  const start = () => {
+    pending = Array.from(app!.querySelectorAll<HTMLElement>('[data-io], .reveal'))
+      .filter(el => !(el.classList.contains('reveal') && !el.hasAttribute('data-io') && el.closest('[data-io]')));
+    checkReveals();
+  };
+  if (ready) requestAnimationFrame(start); else document.addEventListener('intro-done', start, { once: true });
+
+  // Tile spotlight + magnetic buttons
+  app!.querySelectorAll<HTMLElement>('[data-spot]').forEach(t => {
+    t.addEventListener('mousemove', e => {
+      const r = t.getBoundingClientRect();
+      t.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      t.style.setProperty('--my', `${e.clientY - r.top}px`);
+    });
+  });
+  if (finePointer && !reduceMotion) {
+    app!.querySelectorAll<HTMLElement>('.magnetic').forEach(b => {
+      b.addEventListener('mousemove', e => {
+        const r = b.getBoundingClientRect();
+        b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.25}px, ${(e.clientY - r.top - r.height / 2) * 0.35}px)`;
+      });
+      b.addEventListener('mouseleave', () => { b.style.transition = 'transform .6s cubic-bezier(.22,1,.36,1)'; b.style.transform = ''; setTimeout(() => (b.style.transition = ''), 600); });
+    });
+  }
+  onScroll();
 }
-initTheme(); // Initialize dark mode preference
+
+function checkReveals() {
+  if (!pending.length) return;
+  const limit = window.innerHeight * 0.94;
+  pending = pending.filter(el => {
+    if (el.getBoundingClientRect().top > limit) return true;
+    el.classList.add('in');
+    el.querySelectorAll<HTMLElement>('[data-count]').forEach(countUp);
+    return false;
+  });
+}
+
+function countUp(el: HTMLElement) {
+  const target = Number(el.dataset.count || 0);
+  if (reduceMotion) { el.textContent = String(target); return; }
+  const t0 = performance.now(), dur = 1600;
+  const tick = (t: number) => {
+    const p = Math.min((t - t0) / dur, 1);
+    el.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 4))));
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+let lastY = window.scrollY;
+let velocity = 0;
+function onScroll() {
+  const y = window.scrollY;
+  const header = document.querySelector('header');
+  header?.classList.toggle('scrolled', y > 30);
+  header?.classList.toggle('hide', y > lastY && y > 400 && !document.querySelector('nav.nav-active'));
+  velocity = y - lastY;
+  lastY = y;
+
+  if (reduceMotion) return;
+  const vh = window.innerHeight;
+
+  parallaxEls.forEach(el => {
+    const r = el.parentElement!.getBoundingClientRect();
+    const speed = Number(el.dataset.parallax);
+    if (r.bottom < -200 || r.top > vh + 200) return;
+    el.style.transform = `translate3d(0, ${(r.top - vh / 2) * speed}px, 0)`;
+  });
+
+  scrubEls.forEach(words => {
+    const r = words[0]?.parentElement?.getBoundingClientRect();
+    if (!r) return;
+    const progress = Math.min(Math.max((vh * 0.85 - r.top) / (r.height + vh * 0.35), 0), 1);
+    const n = Math.floor(progress * words.length * 1.08);
+    words.forEach((w, i) => w.classList.toggle('on', i < n));
+  });
+}
+
+function loop() {
+  checkReveals();
+  if (marquee && !reduceMotion) {
+    marqueeX -= 0.9 + Math.min(Math.abs(velocity), 60) * 0.35;
+    const half = marquee.scrollWidth / 2;
+    if (-marqueeX >= half) marqueeX += half;
+    marquee.style.transform = `translate3d(${marqueeX}px,0,0)`;
+    velocity *= 0.9;
+  }
+  requestAnimationFrame(loop);
+}
+
+// ---------- Boot ----------
+const path = window.location.pathname.replace(/^\/|\/$/g, '');
+if (['retail', 'exports', 'contact'].includes(path)) currentPage = path as PageName;
+
+try { if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode'); } catch { /* ignore */ }
+
 render();
+window.addEventListener('scroll', onScroll, { passive: true });
+requestAnimationFrame(loop);
+ready = true;
+document.dispatchEvent(new Event('intro-done'));
