@@ -157,7 +157,53 @@ const HomePage = (): string => `
     </div>
   </section>
 
-  
+  <section class="section" id="collections" style="padding-top:0">
+    <div class="wrap">
+      <div class="section-head" data-io>
+        <h2><span class="line"><span>Come, experience,</span></span><span class="line"><span style="transition-delay:.08s">and enjoy.</span></span></h2>
+        <p class="lede reveal" style="--d:.3s">Three ways into the taste of tradition.</p>
+      </div>
+      <div class="bento">
+        <a href="/retail" data-link="retail" class="tile feature reveal" data-spot>
+          <span class="num">01</span><span class="arrow">${ICON.arrow}</span><div class="art art-packs" aria-hidden="true">
+            <img src="/iyengar-sambar-powder.png" alt="" class="p1" /><img src="/everyday-bhaji-masala.jpg" alt="" class="p3" /><img src="/gujarati-chai-masala.jpg" alt="" class="p2" />
+          </div>
+          <h3>Masalas</h3><p>Gujarati Chai, Iyengar Sambar, Everyday Bhaji — blends rooted in regional kitchens.</p>
+        </a>
+        <a href="/retail" data-link="retail" class="tile reveal" style="--d:.1s" data-spot>
+          <span class="num">02</span><span class="arrow">${ICON.arrow}</span><div class="art art-spices" aria-hidden="true">
+            <img src="/spice-cinnamon.jpg" alt="" class="s1" /><img src="/spice-pepper.jpg" alt="" class="s2" /><img src="/spice-cloves.jpg" alt="" class="s3" />
+          </div>
+          <h3>Spices</h3><p>Single-origin whole and ground spices, from Lakadong turmeric to true cinnamon.</p>
+        </a>
+        <a href="/exports" data-link="exports" class="tile dark reveal" style="--d:.2s" data-spot>
+          <span class="num">03</span><span class="arrow">${ICON.arrow}</span><div class="art art-routes" aria-hidden="true">
+            <svg viewBox="0 0 400 220" fill="none">
+              <defs>
+                <pattern id="dots" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="currentColor"/></pattern>
+                <radialGradient id="fade"><stop offset="0.35" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient>
+                <mask id="m"><rect width="400" height="220" fill="url(#fade)"/></mask>
+              </defs>
+              <rect width="400" height="220" fill="url(#dots)" mask="url(#m)" opacity="0.5"/>
+              <g stroke="#f58220" stroke-width="1.4" stroke-linecap="round">
+                <path class="route" d="M250 120 C 230 40, 130 30, 70 70"/>
+                <path class="route" style="animation-delay:-1.1s" d="M250 120 C 290 50, 340 60, 360 90"/>
+                <path class="route" style="animation-delay:-2.2s" d="M250 120 C 260 170, 200 190, 150 175"/>
+                <path class="route" style="animation-delay:-3.3s" d="M250 120 C 300 160, 350 170, 372 150"/>
+              </g>
+              <g fill="#f58220">
+                <circle cx="70" cy="70" r="3.5"/><circle cx="360" cy="90" r="3.5"/><circle cx="150" cy="175" r="3.5"/><circle cx="372" cy="150" r="3.5"/>
+                <circle cx="250" cy="120" r="6"/>
+              </g>
+              <circle class="pulse" cx="250" cy="120" r="6" stroke="#f58220" stroke-width="1.5"/>
+              <text x="262" y="112" font-size="11" fill="#f6f0e6" font-family="Inter, sans-serif" letter-spacing="2">INDIA</text>
+            </svg>
+          </div>
+          <h3>Exports</h3><p>Bulk orders and end-to-end logistics for partners around the world.</p>
+        </a>
+      </div>
+    </div>
+  </section>
 `;
 
 const RetailPage = (): string => `

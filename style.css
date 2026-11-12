@@ -202,6 +202,71 @@ body.dark-mode .theme-toggle .icon-moon { display: none; }
 body.dark-mode .about-scrub em { color: var(--brand); }
 .about-more { margin-top: 2.5rem; color: var(--ink-2); max-width: 56ch; }
 
+/* ---------- Collections ---------- */
+.section-head { display: flex; justify-content: space-between; align-items: end; gap: 2rem; margin-bottom: 3.5rem; flex-wrap: wrap; }
+.section-head h2 { font-size: clamp(2.4rem, 5.5vw, 5rem); max-width: 14ch; }
+.bento { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 1.25rem; }
+.tile {
+  position: relative; border-radius: var(--radius); padding: 2rem; min-height: 460px; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end; isolation: isolate;
+  background: var(--surface); border: 1px solid var(--line);
+  transition: transform 0.6s var(--ease), border-color 0.4s;
+}
+.tile::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity 0.5s;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(245, 130, 32, 0.22), transparent 60%);
+}
+.tile:hover::before { opacity: 1; }
+.tile:hover { border-color: rgba(245, 130, 32, 0.5); }
+.tile .num { position: absolute; top: 1.7rem; left: 2rem; font-family: var(--font-display); font-style: italic; color: var(--ink-2); }
+.tile .arrow {
+  position: absolute; top: 1.4rem; right: 1.6rem; width: 48px; height: 48px; border-radius: 50%;
+  display: grid; place-items: center; border: 1px solid var(--line);
+  transition: background 0.4s, transform 0.6s var(--ease), color 0.4s;
+}
+.tile .arrow svg { width: 18px; height: 18px; }
+.tile:hover .arrow { background: var(--brand); border-color: var(--brand); color: #17110c; transform: rotate(-45deg) scale(1.1); }
+/* Tile artwork */
+.art { position: absolute; left: 0; right: 0; top: 4.2rem; height: 50%; pointer-events: none; }
+.art img { position: absolute; object-fit: cover; transition: transform 0.9s var(--ease); }
+
+.art-packs { top: 3.6rem; height: 44%; }
+.art-packs img { width: 32%; aspect-ratio: 1; bottom: 0; left: 34%; border-radius: 14px; box-shadow: 0 18px 40px -12px rgba(23, 17, 12, 0.55); border: 3px solid rgba(255, 253, 249, 0.9); }
+.art-packs .p1 { transform: translate(-62%, 8%) rotate(-12deg); }
+.art-packs .p3 { transform: translate(62%, 8%) rotate(12deg); }
+.art-packs .p2 { transform: translate(0, -6%) rotate(0deg); z-index: 2; }
+.tile:hover .art-packs .p1 { transform: translate(-82%, 2%) rotate(-18deg); }
+.tile:hover .art-packs .p3 { transform: translate(82%, 2%) rotate(18deg); }
+.tile:hover .art-packs .p2 { transform: translate(0, -14%) rotate(0deg) scale(1.05); }
+
+.art-spices { height: 46%; }
+.art-spices img { border-radius: 50%; aspect-ratio: 1; border: 5px solid var(--surface); box-shadow: 0 16px 36px -14px rgba(23, 17, 12, 0.5); animation: bob 6s ease-in-out infinite; }
+.art-spices .s1 { width: 36%; left: 6%; top: 30%; animation-delay: -1s; }
+.art-spices .s2 { width: 48%; left: 26%; top: 0; z-index: 2; animation-delay: -3s; }
+.art-spices .s3 { width: 34%; right: 6%; top: 40%; animation-delay: -5s; }
+.tile:hover .art-spices .s1 { transform: translate(-12px, 8px) scale(1.06); }
+.tile:hover .art-spices .s2 { transform: scale(1.08); }
+.tile:hover .art-spices .s3 { transform: translate(12px, -4px) scale(1.06); }
+@keyframes bob { 50% { translate: 0 -10px; } }
+
+.art-routes { color: var(--on-dark); top: 3.2rem; height: 56%; }
+.art-routes svg { width: 100%; height: 100%; overflow: visible; }
+.route { stroke-dasharray: 5 7; animation: flow 5s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -96; } }
+.pulse { transform-origin: 250px 120px; animation: pulse 2.6s ease-out infinite; }
+@keyframes pulse { from { transform: scale(1); opacity: 0.9; } to { transform: scale(4.2); opacity: 0; } }
+
+.tile h3 { font-size: clamp(2rem, 3.4vw, 2.9rem); margin-bottom: 0.7rem; }
+.tile p { color: var(--ink-2); font-size: 0.98rem; max-width: 32ch; }
+.tile.feature { background: var(--brand); border-color: var(--brand); }
+.tile.feature, .tile.feature h3, .tile.feature p, .tile.feature .num { color: #17110c; }
+.tile.feature .arrow { border-color: rgba(23, 17, 12, 0.3); }
+.tile.feature:hover .arrow { background: #17110c; color: var(--brand); border-color: #17110c; }
+.tile.dark { background: var(--dark); border-color: var(--dark); }
+.tile.dark h3 { color: var(--on-dark); }
+.tile.dark p, .tile.dark .num { color: rgba(246, 240, 230, 0.6); }
+.tile.dark .arrow { border-color: rgba(246, 240, 230, 0.25); color: var(--on-dark); }
+
 /* ---------- Footer ---------- */
 footer { background: var(--dark); color: var(--on-dark); padding: clamp(4rem, 8vw, 7rem) 0 2rem; overflow: hidden; }
 .footer-cta { font-family: var(--font-display); font-weight: 300; font-size: clamp(2.8rem, 9vw, 8.5rem); letter-spacing: -0.045em; line-height: 0.95; color: var(--on-dark); display: inline-block; }
