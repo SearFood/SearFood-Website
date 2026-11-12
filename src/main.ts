@@ -502,14 +502,72 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
+// ---------- Custom scrollbar ----------
+function setupScrollbar() {
+  const bar = document.createElement('div'); bar.className = 'sbar';
+  const thumb = document.createElement('div'); thumb.className = 'sbar-thumb';
+  bar.appendChild(thumb); document.body.appendChild(bar);
+
+  let hideT: number | undefined;
+  const update = () => {
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - window.innerHeight;
+    if (max <= 0) { bar.style.display = 'none'; return; }
+    bar.style.display = '';
+    const h = Math.max(48, (window.innerHeight / doc.scrollHeight) * window.innerHeight);
+    thumb.style.height = `${h}px`;
+    thumb.style.transform = `translateY(${(window.scrollY / max) * (window.innerHeight - h)}px)`;
+  };
+  const flash = () => { bar.classList.add('show'); clearTimeout(hideT); hideT = window.setTimeout(() => bar.classList.remove('show'), 1200); };
+
+  window.addEventListener('scroll', () => { update(); flash(); }, { passive: true });
+  window.addEventListener('resize', update);
+  setInterval(update, 500); // page height changes on route change / image load
+
+  let startY = 0, startScroll = 0;
+  const move = (e: PointerEvent) => {
+    const doc = document.documentElement;
+    const h = thumb.offsetHeight;
+    const ratio = (doc.scrollHeight - window.innerHeight) / (window.innerHeight - h);
+    window.scrollTo({ top: startScroll + (e.clientY - startY) * ratio, behavior: 'instant' as ScrollBehavior });
+  };
+  const up = () => { bar.classList.remove('drag'); window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
+  thumb.addEventListener('pointerdown', e => {
+    e.preventDefault(); startY = e.clientY; startScroll = window.scrollY; bar.classList.add('drag');
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+  });
+  bar.addEventListener('pointerdown', e => { // click track to jump
+    if (e.target !== bar) return;
+    const doc = document.documentElement;
+    window.scrollTo({ top: (e.clientY / window.innerHeight) * (doc.scrollHeight - window.innerHeight), behavior: 'smooth' });
+  });
+  update();
+}
+
 // ---------- Boot ----------
 const path = window.location.pathname.replace(/^\/|\/$/g, '');
 if (['retail', 'exports', 'contact'].includes(path)) currentPage = path as PageName;
 
 try { if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode'); } catch { /* ignore */ }
 
+document.body.insertAdjacentHTML('beforeend', `
+  <div class="grain"></div>
+  <div class="curtain"></div>
+  <div class="intro"><div class="intro-word"><span>Sear <em>Food</em></span></div><div class="intro-bar"></div></div>
+`);
+document.body.classList.add('loading');
+
 render();
+setupScrollbar();
 window.addEventListener('scroll', onScroll, { passive: true });
 requestAnimationFrame(loop);
-ready = true;
-document.dispatchEvent(new Event('intro-done'));
+
+const finishIntro = () => {
+  document.querySelector('.intro')?.classList.add('done');
+  document.body.classList.remove('loading');
+  ready = true;
+  setTimeout(() => document.dispatchEvent(new Event('intro-done')), 500);
+  setTimeout(() => document.querySelector('.intro')?.remove(), 1400);
+};
+if (reduceMotion) { document.querySelector('.intro')?.remove(); document.body.classList.remove('loading'); ready = true; document.dispatchEvent(new Event('intro-done')); }
+else setTimeout(finishIntro, 1500);
